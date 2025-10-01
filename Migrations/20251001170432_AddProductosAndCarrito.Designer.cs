@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Prueba2.Data;
@@ -11,9 +12,11 @@ using Prueba2.Data;
 namespace Prueba2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251001170432_AddProductosAndCarrito")]
+    partial class AddProductosAndCarrito
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +37,7 @@ namespace Prueba2.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("FechaAgregado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ProductoId")
                         .HasColumnType("integer");
@@ -63,9 +64,7 @@ namespace Prueba2.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Categoria")
                         .IsRequired()
@@ -74,25 +73,6 @@ namespace Prueba2.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("DescripcionCorta")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<bool>("Destacado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("EnPromocion")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Etiquetas")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
@@ -118,13 +98,8 @@ namespace Prueba2.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("PrecioDescuento")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("Stock")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("integer");
 
                     b.Property<int>("VendedorId")
                         .HasColumnType("integer");
@@ -135,13 +110,7 @@ namespace Prueba2.Migrations
 
                     b.HasIndex("Categoria");
 
-                    b.HasIndex("Destacado");
-
-                    b.HasIndex("EnPromocion");
-
                     b.HasIndex("VendedorId");
-
-                    b.HasIndex("Nombre", "DescripcionCorta", "Etiquetas");
 
                     b.ToTable("Productos");
                 });

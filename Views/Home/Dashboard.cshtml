@@ -1,36 +1,65 @@
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore;
+
+@inject Prueba2.Data.AppDbContext _context
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Dashboard Administrativo";
+    var userRole = User.FindFirstValue(ClaimTypes.Role);
+    var userName = User.FindFirstValue(ClaimTypes.Name);
+    var userEmail = User.FindFirstValue(ClaimTypes.Email);
+    var userPhoto = User.FindFirstValue("FotoUrl");
+
+    // Obtener estadísticas
+    var totalProductos = _context.Productos?.Count() ?? 0;
+    var productosPromo = _context.Productos?.Count(p => p.EnPromocion) ?? 0;
+    var productosBajoStock = _context.Productos?.Count(p => p.Stock < 10) ?? 0;
+    var productosRecientes = _context.Productos?
+        .Include(p => p.Vendedor)
+        .OrderByDescending(p => p.FechaCreacion)
+        .Take(5)
+        .ToList() ?? new List<Prueba2.Models.Producto>();
 }
 
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 bg-light sidebar">
-            <div class="text-center my-4">
-                @if (!string.IsNullOrEmpty(ViewData["UserPhoto"] as string))
-                {
-                    <img src="@ViewData["UserPhoto"]" class="rounded-circle" width="80" height="80" alt="Foto perfil">
-                }
-                else
-                {
-                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <span class="text-white fw-bold fs-4">@ViewData["UserName"]?.ToString()[0]</span>
-                    </div>
-                }
-                <h5 class="mt-2">@ViewData["UserName"]</h5>
-                <p class="text-muted">@ViewData["UserEmail"]</p>
-                <span class="badge bg-info">@ViewData["UserRole"]</span>
-            </div>
+            
             
             <nav class="nav flex-column">
-                <a class="nav-link active" href="#">
-                    <i class="fas fa-home"></i> Dashboard
+                <a class="nav-link active" href="/Home/Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
+                <div class="text-center my-4">
+                    @if (!string.IsNullOrEmpty(userPhoto))
+                    {
+                        <img src="@userPhoto" class="rounded-circle" width="80" height="80" alt="Foto perfil">
+                    }
+                    else
+                    {
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
+                            style="width: 80px; height: 80px;">
+                            <span class="text-white fw-bold fs-4">@userName?[0]</span>
+                        </div>
+                    }
+                    <h5 class="mt-2">@userName</h5>
+                    <p class="text-muted">@userEmail</p>
+                    <span class="badge bg-danger">
+                        <i class="fas fa-user-shield"></i> ADMINISTRADOR
+                    </span>
+                </div>
+                @if (userRole == "vendedor" || userRole == "admin")
+                {
+                    <a class="nav-link" href="/Productos">
+                        <i class="fas fa-box"></i> Gestión de Productos
+                    </a>
+                    <a class="nav-link" href="/Productos/Create">
+                        <i class="fas fa-plus"></i> Agregar Producto
+                    </a>
+                }
+                
                 <a class="nav-link" href="#">
-                    <i class="fas fa-shopping-cart"></i> Mis Compras
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="fas fa-heart"></i> Favoritos
+                    <i class="fas fa-chart-bar"></i> Reportes
                 </a>
                 <a class="nav-link" href="#">
                     <i class="fas fa-cog"></i> Configuración
@@ -41,7 +70,7 @@
         <!-- Main Content -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center my-4">
-                <h2>Dashboard Principal</h2>
+                <h2>Panel de Control - Chatbot Ecommerce</h2>
                 <form method="post" action="/Auth/Logout">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-danger">
@@ -50,17 +79,17 @@
                 </form>
             </div>
 
-            <!-- Estadísticas del Chatbot Ecommerce -->
+            <!-- Tarjetas de Estadísticas -->
             <div class="row">
                 <div class="col-md-3 mb-4">
                     <div class="card text-white bg-primary">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h4>0</h4>
-                                    <p>Pedidos Activos</p>
+                                    <h4>@totalProductos</h4>
+                                    <p>Productos Activos</p>
                                 </div>
-                                <i class="fas fa-shopping-bag fa-2x"></i>
+                                <i class="fas fa-box fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -71,10 +100,10 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h4>0</h4>
-                                    <p>Productos Vistos</p>
+                                    <h4>@productosPromo</h4>
+                                    <p>En Promoción</p>
                                 </div>
-                                <i class="fas fa-eye fa-2x"></i>
+                                <i class="fas fa-tag fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -85,10 +114,10 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h4>0</h4>
-                                    <p>Carrito</p>
+                                    <h4>@productosBajoStock</h4>
+                                    <p>Stock Bajo</p>
                                 </div>
-                                <i class="fas fa-shopping-cart fa-2x"></i>
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -100,41 +129,133 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h4>0</h4>
-                                    <p>Mensajes</p>
+                                    <p>Pedidos Hoy</p>
                                 </div>
-                                <i class="fas fa-comments fa-2x"></i>
+                                <i class="fas fa-shopping-bag fa-2x"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Próximas Funcionalidades -->
-            <div class="card">
+            <!-- Acciones Rápidas -->
+            <div class="card mt-4">
                 <div class="card-header">
-                    <h5>Próximas Funcionalidades del Chatbot</h5>
+                    <h5>Acciones Rápidas</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <i class="fas fa-robot text-primary me-2"></i>
-                            Chatbot de Compras Integrado
-                        </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-box text-success me-2"></i>
-                            Catálogo de Productos
-                        </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-credit-card text-warning me-2"></i>
-                            Sistema de Pagos
-                        </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-shipping-fast text-info me-2"></i>
-                            Seguimiento de Pedidos
-                        </li>
-                    </ul>
+                    <div class="row">
+                        @if (userRole == "vendedor" || userRole == "admin")
+                        {
+                            <div class="col-md-4 mb-3">
+                                <a href="/Productos/Create" class="btn btn-success w-100 py-3">
+                                    <i class="fas fa-plus fa-2x mb-2"></i><br>
+                                    Agregar Producto
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="/Productos" class="btn btn-primary w-100 py-3">
+                                    <i class="fas fa-boxes fa-2x mb-2"></i><br>
+                                    Ver Catálogo
+                                </a>
+                            </div>
+                        }
+                        <div class="col-md-4 mb-3">
+                            <a href="#" class="btn btn-warning w-100 py-3">
+                                <i class="fas fa-chart-line fa-2x mb-2"></i><br>
+                                Ver Reportes
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Productos Recientes -->
+            @if (userRole == "vendedor" || userRole == "admin")
+            {
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Productos Recientes</h5>
+                        <a href="/Productos" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+                    </div>
+                    <div class="card-body">
+                        @if (productosRecientes.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Precio</th>
+                                            <th>Stock</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var producto in productosRecientes)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <strong>@producto.Nombre</strong><br>
+                                                    <small class="text-muted">@producto.Categoria</small>
+                                                </td>
+                                                <td>
+                                                    @if (producto.EnPromocion && producto.PrecioDescuento.HasValue)
+                                                    {
+                                                        <span class="text-success"><strong>$@producto.PrecioDescuento.Value.ToString("N2")</strong></span>
+                                                        <br><small class="text-danger"><s>$@producto.Precio.ToString("N2")</s></small>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>$@producto.Precio.ToString("N2")</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (producto.Stock < 5)
+                                                    {
+                                                        <span class="badge bg-danger">@producto.Stock</span>
+                                                    }
+                                                    else if (producto.Stock < 10)
+                                                    {
+                                                        <span class="badge bg-warning">@producto.Stock</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-success">@producto.Stock</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (producto.Activo)
+                                                    {
+                                                        <span class="badge bg-success">Activo</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">Inactivo</span>
+                                                    }
+                                                    @if (producto.EnPromocion)
+                                                    {
+                                                        <span class="badge bg-warning mt-1">Promoción</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                <h5>No hay productos aún</h5>
+                                <p class="text-muted">Comienza agregando tu primer producto al catálogo</p>
+                                <a href="/Productos/Create" class="btn btn-success">Agregar Primer Producto</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -147,13 +268,20 @@
     
     .nav-link {
         color: #333;
-        padding: 10px 15px;
+        padding: 12px 15px;
         margin: 2px 0;
         border-radius: 5px;
+        transition: all 0.3s;
     }
     
     .nav-link:hover, .nav-link.active {
         background-color: #007bff;
         color: white;
+        text-decoration: none;
+    }
+    
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
     }
 </style>

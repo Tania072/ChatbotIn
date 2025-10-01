@@ -502,3 +502,4 @@ C:\Users\tania.vasquez\Documents\Nueva carpeta\Prueba2\obj\Debug\net9.0\refint\P
 C:\Users\tania.vasquez\Documents\Nueva carpeta\Prueba2\obj\Debug\net9.0\Prueba2.pdb
 C:\Users\tania.vasquez\Documents\Nueva carpeta\Prueba2\obj\Debug\net9.0\Prueba2.genruntimeconfig.cache
 C:\Users\tania.vasquez\Documents\Nueva carpeta\Prueba2\obj\Debug\net9.0\ref\Prueba2.dll
+C:\Users\tania.vasquez\Documents\Nueva carpeta\Prueba2\obj\Debug\net9.0\Prueba2.sourcelink.json

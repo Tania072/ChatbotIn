@@ -15,7 +15,7 @@ namespace Prueba2.Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseNpgsql(config.GetConnectionString("PostgresConnection"));
+            optionsBuilder.UseNpgsql(config.GetConnectionString("DefaultConnection"));
 
             return new AppDbContext(optionsBuilder.Options);
         }
