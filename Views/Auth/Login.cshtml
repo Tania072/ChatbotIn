@@ -1,0 +1,48 @@
+@model Prueba2.Controllers.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Iniciar Sesión</h2>
+        
+        <div class="card">
+            <div class="card-body">
+                <!-- Botón Google -->
+                <a href="/Auth/GoogleLogin" class="btn btn-outline-danger w-100 mb-3">
+                    <i class="fab fa-google"></i> Continuar con Google
+                </a>
+                
+                <hr>
+                
+                <!-- Formulario tradicional -->
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <a href="/Auth/Register">¿No tienes cuenta? Regístrate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
