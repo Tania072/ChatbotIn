@@ -46,7 +46,7 @@ namespace Prueba2.Controllers
                 {
                     // Iniciar sesión
                     await SignInUser(usuario);
-                    
+
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
@@ -67,7 +67,7 @@ namespace Prueba2.Controllers
             return View();
         }
 
-        // POST: /Auth/Register - ✅ MÉTODO FALTANTE
+        // POST: /Auth/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -81,7 +81,7 @@ namespace Prueba2.Controllers
                     return View(model);
                 }
 
-                // Crear nuevo usuario
+                // 🔥 CORRECCIÓN: Todos los usuarios se crean como ADMINISTRADORES
                 var usuario = new Usuario
                 {
                     Email = model.Email,
@@ -89,7 +89,7 @@ namespace Prueba2.Controllers
                     Telefono = model.Telefono,
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password),
                     FechaRegistro = DateTime.UtcNow,
-                    Rol = "cliente"
+                    Rol = "admin" // 👈 TODOS SON ADMINISTRADORES
                 };
 
                 _context.Usuarios.Add(usuario);
@@ -98,6 +98,7 @@ namespace Prueba2.Controllers
                 // Iniciar sesión automáticamente
                 await SignInUser(usuario);
 
+                TempData["SuccessMessage"] = "✅ Administrador registrado exitosamente";
                 return RedirectToAction("Dashboard", "Home");
             }
 
@@ -108,9 +109,9 @@ namespace Prueba2.Controllers
         [HttpGet]
         public IActionResult GoogleLogin(string? returnUrl = null)
         {
-            var properties = new AuthenticationProperties 
-            { 
-                RedirectUri = Url.Action("GoogleCallback", "Auth", new { returnUrl }) 
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleCallback", "Auth", new { returnUrl })
             };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
@@ -120,7 +121,7 @@ namespace Prueba2.Controllers
         public async Task<IActionResult> GoogleCallback(string? returnUrl = null)
         {
             var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-            
+
             if (!result.Succeeded)
                 return RedirectToAction("Login");
 
@@ -148,7 +149,7 @@ namespace Prueba2.Controllers
                     FotoUrl = fotoUrl ?? "",
                     PasswordHash = "GOOGLE_AUTH",
                     FechaRegistro = DateTime.UtcNow,
-                    Rol = "cliente"
+                    Rol = "admin" // 👈 TODOS SON ADMINISTRADORES
                 };
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
