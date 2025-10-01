@@ -4116,19 +4116,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tania.vasquez\\.nuget\\packages\\": {}
+    "C:\\Users\\nelson.marroquin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tania.vasquez\\Documents\\Nueva carpeta\\Prueba2\\Prueba2.csproj",
+      "projectUniqueName": "C:\\Users\\nelson.marroquin\\Documents\\CASATIC\\new\\ChatbotIn\\Prueba2.csproj",
       "projectName": "Prueba2",
-      "projectPath": "C:\\Users\\tania.vasquez\\Documents\\Nueva carpeta\\Prueba2\\Prueba2.csproj",
-      "packagesPath": "C:\\Users\\tania.vasquez\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tania.vasquez\\Documents\\Nueva carpeta\\Prueba2\\obj\\",
+      "projectPath": "C:\\Users\\nelson.marroquin\\Documents\\CASATIC\\new\\ChatbotIn\\Prueba2.csproj",
+      "packagesPath": "C:\\Users\\nelson.marroquin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\nelson.marroquin\\Documents\\CASATIC\\new\\ChatbotIn\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\tania.vasquez\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\nelson.marroquin\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"

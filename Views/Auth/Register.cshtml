@@ -3,60 +3,56 @@
     ViewData["Title"] = "Registrarse";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h2>Crear Cuenta</h2>
-        
-        <div class="card">
-            <div class="card-body">
-                <!-- Botón Google -->
-                <a href="/Auth/GoogleLogin" class="btn btn-outline-danger w-100 mb-3">
-                    <i class="fab fa-google"></i> Registrarse con Google
-                </a>
-                
-                <hr>
-                
-                <!-- Formulario tradicional -->
-                <form asp-action="Register" method="post">
-                    @Html.AntiForgeryToken()
-                    
-                    <div class="form-group mb-3">
-                        <label asp-for="Nombre"></label>
-                        <input asp-for="Nombre" class="form-control" />
-                        <span asp-validation-for="Nombre" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label asp-for="Email"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label asp-for="Telefono"></label>
-                        <input asp-for="Telefono" class="form-control" />
-                        <span asp-validation-for="Telefono" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label asp-for="Password"></label>
-                        <input asp-for="Password" type="password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label asp-for="ConfirmPassword"></label>
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-success w-100">Crear Cuenta</button>
-                </form>
-                
-                <div class="text-center mt-3">
-                    <a href="/Auth/Login">¿Ya tienes cuenta? Inicia Sesión</a>
-                </div>
+<div class="register-container">
+    <div class="register-card">
+        <h2 class="register-title">Crear Cuenta</h2>
+
+        <!-- Botón Google -->
+        <a href="/Auth/GoogleLogin" class="btn-google">
+            <i class="fab fa-google"></i> Registrarse con Google
+        </a>
+
+        <div class="divider"></div>
+
+        <!-- Formulario tradicional -->
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="Nombre"></label>
+                <input asp-for="Nombre" class="form-input" />
+                <span asp-validation-for="Nombre" class="validation"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-input" />
+                <span asp-validation-for="Email" class="validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Telefono"></label>
+                <input asp-for="Telefono" class="form-input" />
+                <span asp-validation-for="Telefono" class="validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password" class="form-input" />
+                <span asp-validation-for="Password" class="validation"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-input" />
+                <span asp-validation-for="ConfirmPassword" class="validation"></span>
+            </div>
+
+            <button type="submit" class="btn-submit">Crear Cuenta</button>
+        </form>
+
+        <div class="register-footer">
+            <a href="/Auth/Login">¿Ya tienes cuenta? Inicia Sesión</a>
         </div>
     </div>
 </div>

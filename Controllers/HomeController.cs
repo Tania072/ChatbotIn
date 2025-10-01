@@ -1,39 +1,35 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Prueba2.Models;
 
-namespace Prueba2.Controllers;
-
-public class HomeController : Controller
+namespace ChatbotIn.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        public IActionResult Index()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            return RedirectToAction("Dashboard");
+        }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public IActionResult Dashboard()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            return View();
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public IActionResult Portada()
+        {
+            return View();
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-
-    [Authorize]
-public IActionResult Dashboard()
-{
-    return View();
+        public IActionResult Pedidos() { return View(); }
+        public IActionResult Productos() { return View(); }
+        public IActionResult Reportes() { return View(); }
+        public IActionResult Soporte() { return View(); }
     }
 }
-
